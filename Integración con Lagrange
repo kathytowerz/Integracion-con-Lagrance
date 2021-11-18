@@ -1,7 +1,16 @@
+"""
+Integración con Lagrange
+
+Hecho por:
+    Kathleen Lucía Torres Mancilla
+    Francisco Javier Vite Mimila
+    José Pablo Muñoz Guerrero
+"""
+
 import math as mt
 import numpy as np
 
-h=0.1
+h=0.001
 l=int(5/h)
 
 def lagrangeb2(x,idx,x_at):
@@ -15,28 +24,16 @@ def lagrange2(x,y,x_at):
 def normal_den(x):
     return (1/mt.sqrt(2*mt.pi))*mt.exp(-0.5*mt.pow(x,2))
 
-grid=[-4+h*i for i in range(l)]
+grid=[-4+h*i for i in range(l+1)]
 f_x=[normal_den(i) for i in grid]
-punto_m=[normal_den(i+h/2) for i in grid]
-
-#print(punto_m)
+punto_m=[i+h/2 for i in grid]
 
 
-#-(x+2.5)^2+4
-def f(x):
-    return -mt.pow(x,2)-x*5-2.25
-
-f_x=[-2.25,-5,-1]
-
-def integrar(izq,der,f):
-    d=iz=0
-    F=[0 for i in range(len(f)+1)]
-    for i in range(len(f)):
-        F[i+1]=f[i]/(i+1)
-    print(F)
-    for i in range(len(F)):
-        d+=F[i]*mt.pow(der,i)
-        iz+=F[i]*mt.pow(izq,i)
-    return d-iz
-
-print(integrar(-4.5,-0.5,f_x))
+area=0
+for i in range(len(grid)-1):
+    XS=[grid[i],punto_m[i],grid[i+1]]
+    YS=[normal_den(grid[i]),normal_den(punto_m[i]),normal_den(grid[i+1])]
+    grid_temp=[grid[i]+j*(h/10) for j in range(10)]
+    y_eval=[lagrange2(XS,YS,k) for k in grid_temp]
+    area+=sum(y_eval)*(h/10)
+print(area)
